@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 
 function App() {
+  const [name, setName] = useState("");
+  const [type, setType] = useState("Criatura");
+  const [attack, setAttack] = useState("");
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
   const [randomCard, setRandomCard] = useState(null);
@@ -32,6 +35,15 @@ function App() {
   function pickRandom() {
     if (cards.length === 0) return;
     setRandomCard(cards[Math.floor(Math.random() * cards.length)]);
+  }
+
+  function handleSubmit(e) {
+  e.preventDefault();
+  const card = { name, type, attack: Number(attack), defense: 0 };
+  setCards([...cards, card]);
+  setName("");
+  setType("Criatura");
+  setAttack("");
   }
 
   if (loading) return <p>A carregar...</p>;
