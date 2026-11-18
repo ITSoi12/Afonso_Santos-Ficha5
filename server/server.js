@@ -1,10 +1,10 @@
 const express = require("express");
-
+const cors = require("cors");
 const app = express();
 const PORT = 3000;
 
-res.set("Access-Control-Allow-Origin", "http://localhost:5173");
-
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.json());
 const cards = [
   { name: "Dragão de Cobalto", type: "Criatura", attack: 7, defense: 5 },
   { name: "Guardiã das Marés", type: "Criatura", attack: 4, defense: 8 },
@@ -13,18 +13,6 @@ const cards = [
   { name: "Eco do Vazio", type: "Feitiço", attack: 0, defense: 0 },
 ];
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
 app.get("/api/cartas", (req, res) => {
   const { tipo } = req.query;
 
@@ -32,7 +20,6 @@ app.get("/api/cartas", (req, res) => {
     ? cards.filter((card) => card.type === tipo)
     : cards;
 
-  res.set("Access-Control-Allow-Origin", "http://localhost:5173");
   res.json(filtered);
 });
 app.get("/api/cartas/aleatoria", (req, res) => {
@@ -92,6 +79,12 @@ app.get("/cartas/aleatoria", (req, res) => {
   ));
 });
 
+app.post("/api/cartas", (req, res) => {
+  const card = req.body;
+  cards.push(card);
+  res.status(201).json(card);
+});
+
 app.get("/agora", (req, res) => {
   const now = new Date().toLocaleString("pt-PT", {
     dateStyle: "long",
@@ -102,7 +95,6 @@ app.get("/agora", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.status(404).send(page(
     "404 — não encontrado",
     `<p>Não existe nada em <code>${req.url}</code>.</p>
