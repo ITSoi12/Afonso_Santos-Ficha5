@@ -12,6 +12,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
   fetch("http://localhost:3000/api/cartas")
@@ -44,14 +45,19 @@ function App() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, type, attack: Number(attack), defense: 0 }),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
     .then((card) => {
       setCards([...cards, card]);
       setName("");
       setType("Criatura");
       setAttack("");
-    });
-}
+      setFormError("");
+    })
+    .catch((err) => setFormError(err.message));
+  }
 
   if (loading) return <p>A carregar...</p>;
   if (error) return <p>{error}</p>;

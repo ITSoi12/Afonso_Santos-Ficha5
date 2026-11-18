@@ -77,6 +77,9 @@ app.get("/cartas/aleatoria", (req, res) => {
 
 app.post("/api/cartas", (req, res) => {
   const card = req.body;
+  if (!card.name || !card.type) {
+    return res.status(400).json({ error: "name e type são obrigatórios" });
+  }
   cards.push(card);
   fs.writeFileSync(FILE, JSON.stringify(cards, null, 2));
   res.status(201).json(card);
