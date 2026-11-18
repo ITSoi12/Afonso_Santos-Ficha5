@@ -65,6 +65,16 @@ function App() {
   return (
     <main>
       <h1>A minha coleção</h1>
+      <form onSubmit={handleSubmit}>
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome" />
+        <select value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="Criatura">Criatura</option>
+          <option value="Feitiço">Feitiço</option>
+        </select>
+        <input type="number" value={attack} onChange={(e) => setAttack(e.target.value)} placeholder="Ataque" />
+        <button type="submit">Adicionar</button>
+      </form>
+{formError && <p>{formError}</p>}
 
       <p>
         Tenho {cards.length} cartas · a mostrar {visible.length}
